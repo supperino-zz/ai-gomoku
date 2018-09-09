@@ -183,5 +183,6 @@ class Gomoku:
         x_coord, y_coord = position
         return 0 <= x_coord <= BOARD_SIZE and 0 <= y_coord <= BOARD_SIZE
 
+
 if(__name__ == "__main__"):
     Gomoku().run()
