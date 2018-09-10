@@ -58,14 +58,14 @@ class Gomoku:
         try:
             lin_play = input('linha > ')
             col_play = input('coluna > ')
-            return self.board.mark_piece('X', int(lin_play), int(col_play))
+            return self.board.mark_piece(self.players[self.current_player], int(lin_play), int(col_play))
 
         except ValueError:
             print('Input was not a number [0..14] ')
             return False
 
     def toggle_player(self):
-        pass
+        self.current_player = 0 if self.current_player else 1
 
 
 if __name__ == '__main__':
