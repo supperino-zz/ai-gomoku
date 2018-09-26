@@ -1,5 +1,6 @@
 import numpy as np
 import regex as re
+import utils
 
 from ia import IA
 
@@ -30,7 +31,7 @@ class Gomoku:
         self._winner = None
         self._players = {
             0: 'X',
-            1: 'O',
+            1: 'G',
         }
         self._actual_player = 0
 
@@ -68,6 +69,7 @@ class Gomoku:
             return tuple(map(int, input('X, Y > ').split(',')))
 
     def _render_board(self):
+        utils.clear_screen()
         for index, row in enumerate(self._board):
             print(index, end='  ') if index < 10 else print(index, end=' ')
             list(map(lambda x: print(x, end='  '), row))
