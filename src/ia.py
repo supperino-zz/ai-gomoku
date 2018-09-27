@@ -60,11 +60,11 @@ class IA:
         return value, best_movement
 
     def _heuristics(self, board):
-        postive_factor = (utils.find_doublets('G', board) +
-                          150 * (utils.find_triplets('G', board) +
-                                 95 * utils.find_quartets('G', board)))
-        negative_factor = (utils.find_doublets('X', board) +
-                           150 * (utils.find_triplets('X', board) +
-                                  95 * utils.find_quartets('X', board)))
+        postive_factor = 10 * (utils.find_doublets('G', board) +
+                               100 * (utils.find_triplets('G', board) +
+                                      1000 * utils.find_quartets('G', board)))
+        negative_factor = 10 * (utils.find_doublets('X', board) +
+                                100 * (utils.find_triplets('X', board) +
+                                       1000 * utils.find_quartets('X', board)))
 
         return postive_factor - 0.5 * negative_factor
