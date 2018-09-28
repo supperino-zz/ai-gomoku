@@ -8,7 +8,13 @@ QUANTITY = {
     'QUADRUPLAS': 4
 }
 
+WIN_REGEX = r'([X]{5})|([G]{5})'
+
 BOARD_SIZE = 15
+
+
+def _search_regex(size):
+    return r'([X]{size})|([G]{size})'
 
 
 def all_possible_moves(board, player='G') -> list:
@@ -36,16 +42,9 @@ def search(symbol, pattern, board):
         return start
 
     return (
-        # Search for the rows
         count_row(board) +
-
-        # Search for the columns
         count_row(np.transpose(board)) +
-
-        # Search for the first diagonal direction with at least length elements
         count_diag(board) +
-
-        # Search for the other direction
         count_diag(np.fliplr(board))
     )
 

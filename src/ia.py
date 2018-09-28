@@ -13,7 +13,7 @@ class IA:
         return best_movement
 
     def _minimax(self, board, alfa=-math.inf,
-                 beta=math.inf, current_player='G', max_level=3):
+                 beta=math.inf, current_player='G', max_level=4):
 
         best_movement = ()
 

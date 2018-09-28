@@ -2,13 +2,10 @@ import numpy as np
 import regex as re
 import utils
 
+from utils import WIN_REGEX, BOARD_SIZE
 from ia import IA
 
-BOARD_SIZE = 15
-EXIT = 'get out'
-
 INITIAL_BOARD = np.full((BOARD_SIZE, BOARD_SIZE), '.')
-WIN_REGEX = r'([X]{5})|([O]{5})|([G]{5})'
 
 
 class Gomoku:
