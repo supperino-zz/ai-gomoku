@@ -1,70 +1,35 @@
 import numpy as np
 import regex as re
+import utils
 
-BOARD_SIZE = 15
-EXIT = 'get out'
-INITIAL_MENU = {
-    0: 'Exit',
-    1: 'Play Human vs Human',
-    2: 'Play Human vs AI (Goku)'
-}
-DIRECTION_ENUM = {
-    'UP': (0, -1),
-    'DOWN': (0, 1),
-    'LEFT': (-1, 0),
-    'RIGHT': (1, 0)
-}
-
-DIRECTION_CHANGE_ENUM = {
-    'UP': 'RIGHT',
-    'DOWN': 'LEFT',
-    'LEFT': 'UP',
-    'RIGHT': 'DOWN'
-}
+from utils import WIN_REGEX, BOARD_SIZE
+from ia import IA
 
 INITIAL_BOARD = np.full((BOARD_SIZE, BOARD_SIZE), '.')
-WIN_REGEX = r'([X]{5})|([O]{5})|([G]{5})'
 
 
 class Gomoku:
-    """
-        This class contains all the components needed to run the base game.
-        It should not have any AI related functionality.
-    """
     def __init__(self):
         self._board = np.copy(np.full((15, 15), '.'))
-        self._menu = {
-                        0: 'Exit',
-                        1: 'Play Human vs Human',
-                        2: 'Play Human vs AI (Goku)'
-                    }
+        self._ia = IA()
         self._winner = None
         self._players = {
             0: 'X',
-            1: 'O',
-            2: 'G'  # Goku, the AI agent
+            1: 'G',
         }
         self._actual_player = 0
 
     def run(self):
         self.render()
 
-    def render(self, skip_menu=False):
+    def render(self):
         try:
-            if not skip_menu:
-                self._render_menu()
-                self._game_mode = int(input('>>> '))
-            if self._game_mode != 0:
-                self._start_game(self._game_mode)
+            self._start_game()
         except ValueError:
             print('\nThe given option was not a number!')
             self.render(skip_menu=True)
 
     def _start_game(self, mode=1):
-        # Starting with the AI
-        if mode == 2:
-            self._actual_player = 2
-
         while not self._winner:
             try:
                 move = self._render_game(mode)
@@ -79,27 +44,16 @@ class Gomoku:
         self._render_board()
         print('We have a winner')
 
-    def _render_menu(self):
-        print('Welcome to the awesome Gomoku game!')
-        for key, text in self._menu.items():
-            print('Type {} to: {}'.format(key, text))
-
     def _render_game(self, mode):
         self._render_board()
-        if self._actual_player == 2:
+        if self._actual_player == 1:
             print("It is AI's turn!")
-            return self._ai_agent.next_move(self._board)
+            return self._ia.next_move(self._board)
         else:
-            print('Type the ROW to put your piece:')
-            row = input('>>> ')
-            print('Type the COLUMN to put your piece:')
-            col = input('>>> ')
-            return(int(row), int(col))
+            return tuple(map(int, input('X, Y > ').split(',')))
 
     def _render_board(self):
-        """
-            Only renders de game board on the screen with coordinates
-        """
+        utils.clear_screen()
         for index, row in enumerate(self._board):
             print(index, end='  ') if index < 10 else print(index, end=' ')
             list(map(lambda x: print(x, end='  '), row))
@@ -110,11 +64,6 @@ class Gomoku:
         print()
 
     def _check_row(self):
-        """
-            Checks if the board is finished. i.e. some player has made
-            5 in a row.
-            Returns the symbol of the winner player, if there is one
-        """
         match = None
         for row in self._board:
             row_string = ''.join(row)
@@ -124,11 +73,6 @@ class Gomoku:
         return None
 
     def _check_column(self):
-        """
-            Checks if the board is finished. i.e. some player has made
-            5 in a column
-            Returns the symbol of the winner player, if there is one
-        """
         for column in np.transpose(self._board):
             col_string = ''.join(column)
             match = re.search(WIN_REGEX, col_string)
@@ -137,11 +81,6 @@ class Gomoku:
         return None
 
     def _check_diagonal(self):
-        """
-            Checks if the board is finished. i.e. some player has made
-            5 in a diagonal
-        """
-        # Search for the first direction
         index = - (BOARD_SIZE + 1)
         while index < BOARD_SIZE:
             diagonal_string = ''.join(self._board.diagonal(index))
@@ -150,7 +89,6 @@ class Gomoku:
                 return match.group()[0]
             index += 1
 
-        # Search for the other direction
         index = - (BOARD_SIZE + 1)
         flipped_board = np.fliplr(self._board)
         while index < BOARD_SIZE:
@@ -163,10 +101,7 @@ class Gomoku:
         return None
 
     def _toggle_player(self):
-        if self._game_mode == 2:
-            self._actual_player = 0 if self._actual_player else 2
-        else:
-            self._actual_player = 0 if self._actual_player else 1
+        self._actual_player = 0 if self._actual_player else 1
 
     def _mark_board(self, player, position):
         if not self._valid_position(position) or self._board[position] != '.':
@@ -176,8 +111,8 @@ class Gomoku:
 
     def _game_finished(self):
         return self._check_row() \
-                or self._check_column() \
-                or self._check_diagonal()
+            or self._check_column() \
+            or self._check_diagonal()
 
     def _valid_position(self, position):
         x_coord, y_coord = position
