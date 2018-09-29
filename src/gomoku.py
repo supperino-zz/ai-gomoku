@@ -1,11 +1,11 @@
 import numpy as np
 import utils
-from utils import Piece
+from utils import PIECES
 import ia
 import time
 
 """
-    remove unnecessary class abstraction - Enums.
+    Remove unnecessary class abstraction - Enums.
     Use dict to avoid magic numbers
 """
 
@@ -13,10 +13,10 @@ import time
 class Board:
     def __init__(self):
         self._pieces = np.full((utils.BOARD_SIZE, utils.BOARD_SIZE),
-                               Piece.EMPTY.value)
+                               PIECES['EMPTY'])
 
     def mark_piece(self, player, position):
-        if self._pieces[position] == Piece.EMPTY.value:
+        if self._pieces[position] == PIECES['EMPTY']:
             self._pieces[position] = player
             return True
         else:
@@ -37,7 +37,7 @@ class Gomoku:
         self.board = Board()
         self.winner = None
         self.IA = ia.IA()
-        self._actual_player = Piece.PLAYER.value
+        self._actual_player = PIECES['PLAYER']
 
     def run_game(self):
         while not self.winner:
@@ -54,7 +54,7 @@ class Gomoku:
         pass
 
     def player_move(self):
-        if self._actual_player == Piece.PLAYER:
+        if self._actual_player == PIECES['PLAYER']:
             try:
                 return tuple(map(int, input('X, Y > ').split(',')))
             except ValueError:
@@ -63,7 +63,7 @@ class Gomoku:
             return self.IA.next_move(self.board._pieces)
 
     def toggle_player(self):
-        self._actual_player = Piece.PLAYER if self._actual_player else Piece.IA
+        self._actual_player = PIECES['PLAYER'] if self._actual_player == PIECES['IA'] else PIECES['IA']
 
 
 if __name__ == '__main__':

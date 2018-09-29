@@ -1,6 +1,6 @@
 import utils
 import math
-from utils import Piece
+from utils import PIECES
 import numpy as np
 
 
@@ -13,21 +13,21 @@ class IA:
         return best_movement
 
     def _minimax(self, board, alfa=-math.inf,
-                 beta=math.inf, current_player=Piece.IA.value, max_level=4):
+                 beta=math.inf, current_player=PIECES['IA'], max_level=4):
 
         best_movement = ()
 
         if max_level == 0:
             return (self._heuristics(board), ())
 
-        if current_player == Piece.IA.value:
+        if current_player == PIECES['IA']:
             value = -math.inf
             for movement in utils.all_possible_moves(board):
                 next_board = np.copy(board)
-                next_board[movement] = Piece.IA.value
+                next_board[movement] = PIECES['IA']
 
                 _minimax, _ = self._minimax(next_board, alfa, beta,
-                                            current_player=Piece.PLAYER.value,
+                                            current_player=PIECES['PLAYER'],
                                             max_level=max_level - 1)
 
                 if _minimax > value:
@@ -46,7 +46,7 @@ class IA:
 
                 next_board[movement] = current_player
                 minimax, _ = self._minimax(next_board, beta, alfa,
-                                           current_player=Piece.IA.value,
+                                           current_player=PIECES['IA'],
                                            max_level=max_level - 1)
                 if minimax < value:
                     value = minimax

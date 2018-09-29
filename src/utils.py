@@ -4,11 +4,11 @@ import regex as re
 from enum import Enum
 
 
-class Piece(Enum):
-    EMPTY = '.'
-    PLAYER = 'X'
-    IA = 'G'
-
+PIECES = {
+    'EMPTY': '.',
+    'PLAYER': 'X',
+    'IA': 'G'
+}
 
 QUANTITY = {
     'DUPLAS': 2,
@@ -23,8 +23,8 @@ def _search_regex(size):
     return r'([X]{size})|([G]{size})'
 
 
-def all_possible_moves(board, player=Piece.IA.value) -> list:
-    rows, cols = np.where(board == Piece.EMPTY.value)
+def all_possible_moves(board, player=PIECES['IA']) -> list:
+    rows, cols = np.where(board == PIECES['EMPTY'])
     return list(zip(rows, cols))
 
 
