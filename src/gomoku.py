@@ -1,21 +1,17 @@
 import numpy as np
-from enum import Enum
 import utils
+from utils import Piece
 import ia
 import time
-
-class Piece(Enum):
-    EMPTY = '.'
-    PLAYER = 'X'
-    IA = 'G'
 
 
 class Board:
     def __init__(self):
         self._pieces = np.full((utils.BOARD_SIZE, utils.BOARD_SIZE),
-                               Piece.EMPTY.value) 
-    
+                               Piece.EMPTY.value)
+
     def mark_piece(self, player, position):
+        print(position)
         if self._pieces[position] == Piece.EMPTY.value:
             self._pieces[position] = player.value
             return True
@@ -60,10 +56,10 @@ class Gomoku:
             except ValueError:
                 print('Input was not a number [0..14] ')
         else:
-            return self.IA.next_move(self.board)
+            return self.IA.next_move(self.board._pieces)
 
     def toggle_player(self):
-        self._actual_player = Piece.PLAYER if self._actual_player else Piece.IA
+        self._actual_player = Piece.PLAYER.value if self._actual_player else Piece.IA.value
 
 
 if __name__ == '__main__':

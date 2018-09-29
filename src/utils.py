@@ -1,15 +1,21 @@
 import numpy as np
 import os
 import regex as re
+from enum import Enum
+
+
+class Piece(Enum):
+    EMPTY = '.'
+    PLAYER = 'X'
+    IA = 'G'
+
 
 QUANTITY = {
     'DUPLAS': 2,
     'TRIPLAS': 3,
     'QUADRUPLAS': 4
 }
-
 WIN_REGEX = r'([X]{5})|([G]{5})'
-
 BOARD_SIZE = 15
 
 
@@ -17,8 +23,8 @@ def _search_regex(size):
     return r'([X]{size})|([G]{size})'
 
 
-def all_possible_moves(board, player='G') -> list:
-    rows, cols = np.where(board == '.')
+def all_possible_moves(board, player=Piece.IA.value) -> list:
+    rows, cols = np.where(board == Piece.IA.value)
     return list(zip(rows, cols))
 
 
