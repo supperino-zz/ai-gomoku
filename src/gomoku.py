@@ -4,11 +4,6 @@ from utils import PIECES
 import ia
 import time
 
-"""
-    Remove unnecessary class abstraction - Enums.
-    Use dict to avoid magic numbers
-"""
-
 
 class Board:
     def __init__(self):
