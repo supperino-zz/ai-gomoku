@@ -1,8 +1,5 @@
 import numpy as np
-import os
 import regex as re
-from enum import Enum
-
 
 PIECES = {
     'EMPTY': '.',
@@ -53,6 +50,46 @@ def search(symbol, pattern, board):
         count_diag(board) +
         count_diag(np.fliplr(board))
     )
+
+
+def check_row(pieces):
+    match = None
+    for row in pieces:
+        row_string = ''.join(row)
+        match = re.search(WIN_REGEX, row_string)
+        if match:
+            return match.group()[0]
+    return None
+
+
+def check_column(pieces):
+    for column in np.transpose(pieces):
+        col_string = ''.join(column)
+        match = re.search(WIN_REGEX, col_string)
+        if match:
+            return match.group()[0]
+    return None
+
+
+def check_diagonal(pieces):
+    index = - (BOARD_SIZE + 1)
+    while index < BOARD_SIZE:
+        diagonal_string = ''.join(pieces.diagonal(index))
+        match = re.search(WIN_REGEX, diagonal_string)
+        if match:
+            return match.group()[0]
+        index += 1
+
+    index = - (BOARD_SIZE + 1)
+    flipped_board = np.fliplr(pieces)
+    while index < BOARD_SIZE:
+        diagonal_string = ''.join(flipped_board.diagonal(index))
+        match = re.search(WIN_REGEX, diagonal_string)
+        if match:
+            return match.group()[0]
+        index += 1
+
+    return None
 
 
 def find_doublets(symbol, board):

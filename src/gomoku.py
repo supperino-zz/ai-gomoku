@@ -2,7 +2,6 @@ import numpy as np
 import utils
 from utils import PIECES
 import ia
-import time
 
 
 class Board:
@@ -46,7 +45,9 @@ class Gomoku:
             self.toggle_player()
 
     def check_win(self):
-        pass
+        return utils.check_row(self.board._pieces) \
+            or utils.check_diagonal(self.board._pieces) \
+            or utils.check_column(self.board._pieces)
 
     def player_move(self):
         if self._actual_player == PIECES['PLAYER']:
@@ -58,7 +59,8 @@ class Gomoku:
             return self.IA.next_move(self.board._pieces)
 
     def toggle_player(self):
-        self._actual_player = PIECES['PLAYER'] if self._actual_player == PIECES['IA'] else PIECES['IA']
+        self._actual_player = PIECES['PLAYER'] \
+            if self._actual_player == PIECES['IA'] else PIECES['IA']
 
 
 if __name__ == '__main__':
