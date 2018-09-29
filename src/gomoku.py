@@ -2,7 +2,7 @@ import numpy as np
 from enum import Enum
 import utils
 import ia
-
+import time
 
 class Piece(Enum):
     EMPTY = '.'
@@ -16,10 +16,8 @@ class Board:
                                Piece.EMPTY.value) 
     
     def mark_piece(self, player, position):
-        print(player)
-        print(player.value)
         if self._pieces[position] == Piece.EMPTY.value:
-            self._pieces[position] == player.value
+            self._pieces[position] = player.value
             return True
         else:
             return False
@@ -56,10 +54,13 @@ class Gomoku:
         pass
 
     def player_move(self):
-        try:
-            return tuple(map(int, input('X, Y > ').split(',')))
-        except ValueError:
-            print('Input was not a number [0..14] ')
+        if self._actual_player == Piece.PLAYER:
+            try:
+                return tuple(map(int, input('X, Y > ').split(',')))
+            except ValueError:
+                print('Input was not a number [0..14] ')
+        else:
+            return self.IA.next_move(self.board)
 
     def toggle_player(self):
         self._actual_player = Piece.PLAYER if self._actual_player else Piece.IA
