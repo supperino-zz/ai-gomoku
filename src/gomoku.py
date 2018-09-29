@@ -4,6 +4,11 @@ from utils import Piece
 import ia
 import time
 
+"""
+    remove unnecessary class abstraction - Enums.
+    Use dict to avoid magic numbers
+"""
+
 
 class Board:
     def __init__(self):
@@ -11,9 +16,8 @@ class Board:
                                Piece.EMPTY.value)
 
     def mark_piece(self, player, position):
-        print(position)
         if self._pieces[position] == Piece.EMPTY.value:
-            self._pieces[position] = player.value
+            self._pieces[position] = player
             return True
         else:
             return False
@@ -33,7 +37,7 @@ class Gomoku:
         self.board = Board()
         self.winner = None
         self.IA = ia.IA()
-        self._actual_player = Piece.PLAYER
+        self._actual_player = Piece.PLAYER.value
 
     def run_game(self):
         while not self.winner:
@@ -59,7 +63,7 @@ class Gomoku:
             return self.IA.next_move(self.board._pieces)
 
     def toggle_player(self):
-        self._actual_player = Piece.PLAYER.value if self._actual_player else Piece.IA.value
+        self._actual_player = Piece.PLAYER if self._actual_player else Piece.IA
 
 
 if __name__ == '__main__':

@@ -23,7 +23,6 @@ class IA:
         if current_player == Piece.IA.value:
             value = -math.inf
             for movement in utils.all_possible_moves(board):
-                print(movement)
                 next_board = np.copy(board)
                 next_board[movement] = Piece.IA.value
 

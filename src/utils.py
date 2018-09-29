@@ -24,7 +24,7 @@ def _search_regex(size):
 
 
 def all_possible_moves(board, player=Piece.IA.value) -> list:
-    rows, cols = np.where(board == Piece.IA.value)
+    rows, cols = np.where(board == Piece.EMPTY.value)
     return list(zip(rows, cols))
 
 
