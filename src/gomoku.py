@@ -1,51 +1,52 @@
+import numpy as np
+from enum import Enum
+import utils
+import ia
+
+
+class Piece(Enum):
+    EMPTY = '.'
+    PLAYER = 'X'
+    IA = 'G'
+
+
 class Board:
     def __init__(self):
-        self.pieces = [['_' for _ in range(15)] for _ in range(15)]
-
-    def __str__(self):
-        return self.board_render(self.pieces)
-
-    def mark_piece(self, player, x, y):
-        if self.pieces[x][y] == '_':
-            self.pieces[x][y] = player
+        self._pieces = np.full((utils.BOARD_SIZE, utils.BOARD_SIZE),
+                               Piece.EMPTY.value) 
+    
+    def mark_piece(self, player, position):
+        print(player)
+        print(player.value)
+        if self._pieces[position] == Piece.EMPTY.value:
+            self._pieces[position] == player.value
             return True
         else:
             return False
 
-    def board_render(self, pieces):
-        board = ' '
-        for index, row in enumerate(pieces):
-            if index < 10:
-                board = '{board} \n {index}   {row}'.format(
-                    board=board, index=index, row='  '.join(str(e) for e in row)
-                )
-            else:
-                board = '{board} \n {index}  {row}'.format(
-                    board=board, index=index, row='  '.join(str(e) for e in row)
-                )
-        board = '{board}\n   '.format(board=board)
-        for i in range(len(self.pieces)):
-            if(i < 10):
-                board = '{board}  {i}'.format(board=board, i=i)
-            else:
-                board = '{board} {i}'.format(board=board, i=i)
-        return board
+    def __str__(self):
+        return self.board_render()
+
+    def board_render(self):
+        _string_board = ''
+        for index, row in enumerate(self._pieces):
+            _string_board = _string_board + '  '.join(row) + '\n'
+        return _string_board
 
 
 class Gomoku:
     def __init__(self):
         self.board = Board()
         self.winner = None
-        self.players = {
-            0: 'X',
-            1: 'O'
-        }
-        self.current_player = 0
+        self.IA = ia.IA()
+        self._actual_player = Piece.PLAYER
 
     def run_game(self):
         while not self.winner:
+            utils.clear_screen()
             print(self.board)
-            if not self.player_move():
+            if not self.board.mark_piece(self._actual_player,
+                                         self.player_move()):
                 print('Position already used!')
                 continue
             self.check_win()
@@ -56,17 +57,13 @@ class Gomoku:
 
     def player_move(self):
         try:
-            lin_play = input('linha > ')
-            col_play = input('coluna > ')
-            return self.board.mark_piece(self.players[self.current_player], int(lin_play), int(col_play))
-
+            return tuple(map(int, input('X, Y > ').split(',')))
         except ValueError:
             print('Input was not a number [0..14] ')
-            return False
 
     def toggle_player(self):
-        self.current_player = 0 if self.current_player else 1
+        self._actual_player = Piece.PLAYER if self._actual_player else Piece.IA
 
 
 if __name__ == '__main__':
-    teste = Gomoku().run_game()
+    Gomoku().run_game()

@@ -27,7 +27,7 @@ class Gomoku:
             self._start_game()
         except ValueError:
             print('\nThe given option was not a number!')
-            self.render(skip_menu=True)
+            self.render()
 
     def _start_game(self, mode=1):
         while not self._winner:
@@ -119,5 +119,5 @@ class Gomoku:
         return 0 <= x_coord <= BOARD_SIZE and 0 <= y_coord <= BOARD_SIZE
 
 
-if(__name__ == "__main__"):
-    Gomoku().run()
+# if(__name__ == "__main__"):
+#     Gomoku().run()
